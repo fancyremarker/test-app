@@ -1,11 +1,14 @@
-FROMCACHE aptible-ruby
-FROM quay.io/aptible/ruby:ruby-2.0.0
+FROM quay.io/aptible/ruby:ruby-2.2
 
-ADD . /opt/test-app
-WORKDIR /opt/test-app
+RUN apt-install redis-server
+
+ADD Gemfile /app/
+WORKDIR /app
 RUN bundle install --without development test
+
+ADD . /app
 
 ENV PORT 3000
 EXPOSE 3000
 
-CMD bundle exec rackup -p $PORT
+CMD ./start.sh
